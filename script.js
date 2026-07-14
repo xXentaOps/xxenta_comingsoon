@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── Countdown Timer Logic ───────────────────────────────────────
     // Target: August 1, 2026 at 00:00:00 CEST (UTC+2)
-    const COUNTDOWN_TARGET = new Date('2026-08-01T00:00:00+02:00').getTime();
+    const COUNTDOWN_TARGET = new Date('2026-09-01T00:00:00+02:00').getTime();
 
     function formatDigit(val) {
         return val.toString().padStart(2, '0');
