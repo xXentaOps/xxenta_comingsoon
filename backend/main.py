@@ -63,7 +63,7 @@ def generate_ai_report(request):
 
         prompt = f"""
 Je bent de xXenta AI Report Engine, een senior C-Level AI Strategy Consultant voor xXenta.
-Schrijf een zeer overzichtelijk, hoogwaardig en prachtig geformatteerd managementrapport in het Nederlands voor het leiderschapsteam van {org_name} (gericht aan {contact_name}).
+Schrijf een zeer overzichtelijk, krachtig en to-the-point managementrapport in het Nederlands voor het leiderschapsteam van {org_name} (gericht aan {contact_name}).
 
 GEGEVENS VAN DE XXENTA AI IMPACT SCAN:
 - Organisatie: {org_name}
@@ -78,26 +78,28 @@ GEGEVENS VAN DE XXENTA AI IMPACT SCAN:
 - Belangrijkste Ontwikkelprioriteiten: {bottom_priorities}
 - Herkende Organisatiepatronen: {patterns}
 
-BELANGRIJKE FORMATTING EN OPMAAK INSTRUCTIES:
-- Gebruik GEEN codeblocks (geen ```).
-- Gebruik GEEN ASCII-art diagrammen of platte tekst tabellen met pijltekens of pipes (|).
-- Gebruik uitsluitend heldere koppen (###), duidelijke alinea's, vette tekst (**tekst**) en overzichtelijke bullet lists (* item) voor optimale leesbaarheid op het web dashboard.
+BELANGRIJKE FORMATTING EN STRUCTUUR INSTRUCTIES:
+1. VERPLICHT: Begin DIRECT bij '### 1. Executive Summary & Strategische Positionering'.
+2. Voeg GEEN algemene koptekst of headermeta toe zoals 'AI STRATEGISCH MANAGEMENTRAPPORT', 'Aan:', 'Auteur:' of 'Onderwerp:'.
+3. Gebruik GEEN codeblocks (geen ```) en GEEN platte tekst tabellen met pipes (|).
+4. Gebruik voor hoofdsecties uitsluitend '###' en voor onderwerpen binnen een sectie uitsluitend vette tekst (**Onderwerp:**). Gebruik GEEN '####' of '#####'.
 
-STRUCTUUR VAN HET MANAGEMENTSAMENVATTING & ADVIESRAPPORT:
+SECTIES (MANDATORY):
 
 ### 1. Executive Summary & Strategische Positionering
 Analyseer de huidige AI-volwassenheid van {org_name}. Bespreek wat de score van {total_score}/55 betekent voor de marktpositie en innovatiekracht. Belicht de sterke punten ({top_strengths}) als fundament voor verdere groei.
 
 ### 2. Diepgaande Domein- & Patroonanalyse
-Licht het herkenbare patroon toe ({patterns}). Bespreek de balans en wisselwerking tussen cultuur ({climate_score}/5), procesautomatisering ({flow_score}/5), talentontwikkeling ({growth_score}/5) en het ecosysteem ({ecosystem_score}/5). Toon de risico's van achterblijvende factoren ({bottom_priorities}).
+Licht het herkenbare patroon toe ({patterns}). Bespreek de wisselwerking tussen cultuur ({climate_score}/5), procesautomatisering ({flow_score}/5), talentontwikkeling ({growth_score}/5) en het ecosysteem ({ecosystem_score}/5). Toon de risico's van achterblijvende factoren ({bottom_priorities}).
 
 ### 3. Strategische Roadmap (Komende 90 Dagen)
-Formuleer 3 concrete, direct uitvoerbare en onderbouwde initiatieven waarmee {org_name} de komende 90 dagen de AI-transitie versnelt.
+Formuleer 3 concrete, direct uitvoerbare en onderbouwde initiatieven waarmee {org_name} de komende 90 dagen de AI-transitie versnelt:
+* **Initiatief 1: Governance & Veiligheid Fast-Track (Dagen 1-30)**
+* **Initiatief 2: AI Use-Case Sprints in Kernprocessen (Dagen 31-60)**
+* **Initiatief 3: Schalen van Kennis & Cultuur (Dagen 61-90)**
 
 ### 4. Advies voor Bestuur & Leiderschap
-Geef advies aan {contact_name} en het leiderschapsteam over eigenaarschap, psychologische veiligheid, ethiek en duurzame mens-AI samenwerking.
-
-Schrijf in een professionele, inspirerende, zakelijke en actiegerichte stijl.
+Geef beknopt en krachtig advies aan {contact_name} en het leiderschapsteam over eigenaarschap, psychologische veiligheid, ethiek en duurzame mens-AI samenwerking.
 """
 
         response = client.models.generate_content(
@@ -105,7 +107,7 @@ Schrijf in een professionele, inspirerende, zakelijke en actiegerichte stijl.
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.7,
-                max_output_tokens=3000
+                max_output_tokens=4096
             )
         )
         report_text = response.text

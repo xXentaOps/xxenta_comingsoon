@@ -316,10 +316,13 @@ function formatMarkdown(text) {
     // Replace bold text
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
-    // Replace headings
-    html = html.replace(/^### (.*$)/gim, '<h3 style="color: var(--color-accent-cyan); margin-top: 24px; margin-bottom: 10px; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px;">$1</h3>');
-    html = html.replace(/^## (.*$)/gim, '<h2 style="color: var(--color-accent-cyan); margin-top: 28px; margin-bottom: 12px; font-size: 20px;">$1</h2>');
-    html = html.replace(/^# (.*$)/gim, '<h1 style="color: var(--color-accent-cyan); margin-top: 30px; margin-bottom: 14px; font-size: 22px;">$1</h1>');
+    // Replace headings (h1 to h6) - match with or without leading whitespace
+    html = html.replace(/^###### (.*$)/gim, '<h6 style="color: var(--color-accent-cyan); margin-top: 16px; margin-bottom: 6px; font-size: 14px; font-weight: 700;">$1</h6>');
+    html = html.replace(/^##### (.*$)/gim, '<h5 style="color: var(--color-accent-cyan); margin-top: 18px; margin-bottom: 8px; font-size: 15px; font-weight: 700;">$1</h5>');
+    html = html.replace(/^#### (.*$)/gim, '<h4 style="color: var(--color-accent-cyan); margin-top: 20px; margin-bottom: 8px; font-size: 16px; font-weight: 700;">$1</h4>');
+    html = html.replace(/^### (.*$)/gim, '<h3 style="color: var(--color-accent-cyan); margin-top: 24px; margin-bottom: 10px; font-size: 18px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px;">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 style="color: var(--color-accent-cyan); margin-top: 28px; margin-bottom: 12px; font-size: 20px; font-weight: 800;">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 style="color: var(--color-accent-cyan); margin-top: 30px; margin-bottom: 14px; font-size: 22px; font-weight: 800;">$1</h1>');
 
     // Bullet lists
     html = html.replace(/^\* (.*$)/gim, '<li style="margin-left: 20px; margin-bottom: 8px;">$1</li>');
