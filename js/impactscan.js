@@ -2,8 +2,8 @@
  * xXenta AI Impact Scan - Front-end Application Controller
  */
 
-// Optional: Set your deployed Google Cloud Function URL here
-const API_ENDPOINT = ""; // e.g. "https://europe-west1-xxenta-ops.cloudfunctions.net/generate-ai-report"
+// Deployed Google Cloud Function URL
+const API_ENDPOINT = "https://generate-ai-report-fiemy2wigq-ew.a.run.app";
 
 let currentStep = 0;
 const totalSteps = SCAN_QUESTIONS.length;
