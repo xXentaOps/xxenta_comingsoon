@@ -197,8 +197,14 @@ function renderDashboard(orgName, contactName, email) {
         <p style="color: var(--color-accent-cyan); font-weight: 600;">${pattern.advice}</p>
     `;
 
-    // 6. Management Summary Text
-    document.getElementById("res-summary-text").innerText = scanResults.summaryText;
+    // 6. Management Summary Container (Initial Local Synthesis)
+    document.getElementById("res-summary-content").innerHTML = `
+        <p style="margin-bottom: 12px; font-size: 15px; color: var(--color-text-muted);">${scanResults.summaryText}</p>
+        <div id="ai-status-loader" style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-accent-cyan); margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.15);">
+            <span class="pulse-dot"></span>
+            <span>✨ AI Report Engine is een uitgebreid managementrapport aan het schrijven via Google Gemini...</span>
+        </div>
+    `;
 }
 
 function renderRadarChart(radarAxes) {
@@ -216,7 +222,7 @@ function renderRadarChart(radarAxes) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'xXenta Impact Score (1-5)',
+                label: 'xXenta Score (0-5)',
                 data: dataValues,
                 backgroundColor: 'rgba(53, 208, 247, 0.35)',
                 borderColor: '#35D0F7',
@@ -225,14 +231,23 @@ function renderRadarChart(radarAxes) {
                 pointBorderColor: '#35D0F7',
                 pointHoverBackgroundColor: '#35D0F7',
                 pointHoverBorderColor: '#FFFFFF',
-                pointRadius: 5
+                pointRadius: 6,
+                pointHoverRadius: 8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'nearest',
+                intersect: true
+            },
             scales: {
                 r: {
+                    min: 0,
+                    max: 5,
+                    suggestedMin: 0,
+                    suggestedMax: 5,
                     angleLines: { color: 'rgba(255, 255, 255, 0.25)' },
                     grid: { color: 'rgba(255, 255, 255, 0.2)' },
                     pointLabels: {
@@ -240,11 +255,11 @@ function renderRadarChart(radarAxes) {
                         font: { size: 12, family: 'Plus Jakarta Sans', weight: '700' }
                     },
                     ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: 'rgba(255, 255, 255, 0.8)',
                         backdropColor: 'transparent',
                         stepSize: 1,
-                        min: 0,
-                        max: 5
+                        showLabelBackdrop: false,
+                        font: { size: 11 }
                     }
                 }
             },
@@ -256,17 +271,6 @@ function renderRadarChart(radarAxes) {
 }
 
 async function fetchAIReport(orgName, contactName, email, results) {
-    const aiContainer = document.getElementById("ai-report-content");
-    aiContainer.innerHTML = `
-        <div style="background: rgba(53, 208, 247, 0.1); border: 1px solid var(--color-accent-cyan); border-radius: var(--radius-md); padding: 18px; margin-top: 15px;">
-            <div style="display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--color-accent-cyan); margin-bottom: 8px;">
-                <span>✨ AI Report Engine</span>
-                <span style="font-size: 11px; background: rgba(53, 208, 247, 0.2); padding: 3px 8px; border-radius: 12px;">Live Generatie</span>
-            </div>
-            <p style="font-size: 14px; color: var(--color-text-muted); margin: 0;"><em>Bezig met analyseren van uw scores via Google Cloud Gemini AI...</em></p>
-        </div>
-    `;
-
     try {
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
@@ -281,22 +285,24 @@ async function fetchAIReport(orgName, contactName, email, results) {
 
         const data = await response.json();
         if (data.success && data.report) {
-            // Format Markdown response to clean HTML
             const formattedHTML = formatMarkdown(data.report);
-            aiContainer.innerHTML = `
-                <div style="background: rgba(9, 146, 209, 0.12); border: 1px dashed var(--color-accent-cyan); border-radius: var(--radius-md); padding: 24px; margin-top: 15px;">
-                    <div style="display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--color-accent-cyan); margin-bottom: 16px;">
-                        <span style="font-size: 18px;">✨ AI Management Advies Rapport</span>
-                        <span style="font-size: 11px; background: var(--color-accent-cyan); color: #001A2E; padding: 3px 10px; border-radius: 12px; font-weight: 800;">Gegenereerd via Google Gemini</span>
-                    </div>
-                    <div class="ai-formatted-report" style="color: var(--color-text-main); font-size: 15px; line-height: 1.7;">
-                        ${formattedHTML}
-                    </div>
+            const summaryContainer = document.getElementById("res-summary-content");
+            
+            summaryContainer.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <span style="font-size: 12px; background: rgba(53, 208, 247, 0.2); color: var(--color-accent-cyan); padding: 4px 12px; border-radius: 20px; font-weight: 700; border: 1px solid var(--color-accent-cyan);">
+                        ✨ Gepersonaliseerd door Google Gemini AI
+                    </span>
+                </div>
+                <div class="ai-formatted-report" style="color: var(--color-text-main); font-size: 15px; line-height: 1.7;">
+                    ${formattedHTML}
                 </div>
             `;
         }
     } catch (err) {
         console.error("AI Report Endpoint Error:", err);
+        const loader = document.getElementById("ai-status-loader");
+        if (loader) loader.style.display = "none";
     }
 }
 
@@ -304,16 +310,12 @@ function formatMarkdown(text) {
     if (!text) return "";
     let html = text;
     
-    // Bold
+    // Clean up raw header markdown syntax
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Headings ###
     html = html.replace(/^### (.*$)/gim, '<h4 style="color: var(--color-accent-cyan); margin-top: 18px; margin-bottom: 8px; font-size: 16px;">$1</h4>');
-    
-    // Headings ##
     html = html.replace(/^## (.*$)/gim, '<h3 style="color: var(--color-accent-cyan); margin-top: 22px; margin-bottom: 10px; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">$1</h3>');
+    html = html.replace(/^# (.*$)/gim, '<h2 style="color: var(--color-accent-cyan); margin-top: 24px; margin-bottom: 12px; font-size: 20px;">$1</h2>');
 
-    // Paragraph breaks
     html = html.replace(/\n\n/g, '</p><p style="margin-bottom: 12px;">');
     html = '<p style="margin-bottom: 12px;">' + html + '</p>';
     
