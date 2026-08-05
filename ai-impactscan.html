@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xXenta | AI Impact Scan</title>
+    <meta name="description" content="Evalueer de AI-volwassenheid van jouw organisatie met de xXenta AI Impact Scan. Ontvang direct inzichten, een spinnenwebdiagram en een gepersonaliseerd managementrapport.">
+    <link rel="icon" type="image/svg+xml" href="logo-symbol-blue.svg">
+    
+    <!-- Google Fonts & Chart.js -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/impactscan.css">
+</head>
+<body>
+
+    <!-- Ambient Ambient Glow Background -->
+    <div class="scan-page-bg"></div>
+
+    <!-- Header Navigation -->
+    <header class="scan-header">
+        <a href="index.html" class="scan-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1341 1341">
+                <defs>
+                    <linearGradient id="brand-grad" x1="0" y1="0" x2="1341" y2="1341" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#35D0F7" />
+                        <stop offset="100%" stop-color="#0992d1" />
+                    </linearGradient>
+                </defs>
+                <path fill="url(#brand-grad)" d="M1209,1341H134C60,1341,0,1281,0,1207V133C0,59,60,0,134,0h1075c74,0,133,59,133,133v1074C1341,1281,1282,1341,1209,1341z M849,191c24-24,56-36,88-36s64,12,88,36c49,49,49,128,0,177l-88,88l-88,88c49-49,49-128,0-177C800,318,800,239,849,191z" />
+            </svg>
+            <span class="scan-brand-title">xXenta AI Impactscan</span>
+        </a>
+        <a href="index.html" class="btn-secondary">Terug naar Website</a>
+    </header>
+
+    <!-- Main Container -->
+    <main class="scan-container">
+
+        <!-- 11-Question Stepper Wizard Card -->
+        <section id="wizard-card" class="glass-card">
+            <div class="stepper-header">
+                <span id="step-counter" class="step-badge">Vraag 1 van 11</span>
+                <span id="domain-indicator" class="domain-badge">Domein: Climate</span>
+            </div>
+
+            <div class="progress-track">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+
+            <div id="question-container">
+                <!-- Dynamically populated by js/impactscan.js -->
+            </div>
+
+            <div class="wizard-actions">
+                <button id="btn-prev" class="btn-secondary" style="visibility: hidden;">Vorige Vraag</button>
+                <button id="btn-next" class="btn-primary">Volgende Vraag</button>
+            </div>
+        </section>
+
+        <!-- Lead Capture Gate Modal -->
+        <div id="lead-modal" class="modal-overlay" style="display: none;">
+            <div class="glass-card modal-card">
+                <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">Jouw AI Impact Rapport is Gereed</h2>
+                <p style="color: var(--color-text-muted); font-size: 14px; margin-bottom: 24px;">
+                    Vul uw gegevens in om direct toegang te krijgen tot de resultaten, het spinnenwebdiagram en de strategische aanbevelingen.
+                </p>
+
+                <form id="lead-form">
+                    <div class="form-group">
+                        <label for="input-org">Organisatienaam *</label>
+                        <input type="text" id="input-org" class="form-control" placeholder="bijv. Noordhuys" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-name">Naam Contactpersoon *</label>
+                        <input type="text" id="input-name" class="form-control" placeholder="bijv. Jan de Vries" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-email">Zakelijk E-mailadres *</label>
+                        <input type="email" id="input-email" class="form-control" placeholder="jan@organisatie.nl" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 12px;">Bekijk Mijn AI Impact Rapport</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Interactive Results Dashboard Section -->
+        <section id="results-card" class="glass-card" style="display: none;">
+            
+            <div class="results-header">
+                <p style="text-transform: uppercase; font-size: 12px; letter-spacing: 1.5px; color: var(--color-accent-cyan); font-weight: 700;">
+                    Gepersonaliseerd Managementrapport voor <span id="res-org-name"></span>
+                </p>
+            </div>
+
+            <div class="maturity-hero">
+                <span id="res-maturity-title" class="maturity-title">AI Accelerator</span>
+                <p id="res-maturity-sub" style="font-size: 18px; color: var(--color-text-muted); font-weight: 600;">Schaalvergroting & Integratie</p>
+                <div id="res-score-badge" class="maturity-score-pill">Score: 37 / 55 (67%)</div>
+                <p id="res-maturity-desc" style="max-width: 700px; text-align: center; color: var(--color-text-muted); margin-top: 12px; font-size: 15px;"></p>
+            </div>
+
+            <!-- Domain Progress Bars Grid -->
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">Greenhouse Domeinscores</h3>
+            <div id="domains-grid" class="dashboard-grid">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Radar Chart Container -->
+            <div class="glass-card" style="background: rgba(0,0,0,0.25); padding: 30px; margin-bottom: 30px;">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; text-align: center;">AI Maturity Radar Diagram</h3>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Strengths and Priorities Grid -->
+            <div class="dashboard-grid">
+                <div class="domain-card">
+                    <h3 style="color: var(--color-accent-cyan); font-size: 18px; margin-bottom: 14px;">Sterke Punten</h3>
+                    <ul id="list-strengths" style="padding-left: 20px;"></ul>
+                </div>
+                <div class="domain-card">
+                    <h3 style="color: #FF6B6B; font-size: 18px; margin-bottom: 14px;">Ontwikkelprioriteiten</h3>
+                    <ul id="list-priorities" style="padding-left: 20px;"></ul>
+                </div>
+            </div>
+
+            <!-- Recognized Pattern Alert -->
+            <div id="pattern-alert-box" class="pattern-alert">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Executive Management Summary -->
+            <div class="domain-card" style="margin-bottom: 30px;">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--color-accent-cyan);">Managementsamenvatting & Strategisch Advies</h3>
+                <div id="res-summary-text" style="white-space: pre-line; color: var(--color-text-muted); font-size: 15px; line-height: 1.7;"></div>
+                
+                <div id="ai-report-content" style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--color-glass-border);"></div>
+            </div>
+
+            <!-- Call to Action Buttons -->
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 20px;" class="no-print">
+                <a href="https://xxenta.com" target="_blank" class="btn-primary" style="text-decoration: none;">Plan een AI Strategie Sessie</a>
+                <button onclick="window.print()" class="btn-secondary">Exporteer / Print Rapport</button>
+                <button onclick="location.reload()" class="btn-secondary">Opnieuw Invullen</button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- App Scripts -->
+    <script src="js/questionsData.js"></script>
+    <script src="js/reportEngine.js"></script>
+    <script src="js/impactscan.js"></script>
+</body>
+</html>
