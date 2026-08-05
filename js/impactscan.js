@@ -310,12 +310,33 @@ function formatMarkdown(text) {
     if (!text) return "";
     let html = text;
     
-    // Clean up raw header markdown syntax
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/^### (.*$)/gim, '<h4 style="color: var(--color-accent-cyan); margin-top: 18px; margin-bottom: 8px; font-size: 16px;">$1</h4>');
-    html = html.replace(/^## (.*$)/gim, '<h3 style="color: var(--color-accent-cyan); margin-top: 22px; margin-bottom: 10px; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">$1</h3>');
-    html = html.replace(/^# (.*$)/gim, '<h2 style="color: var(--color-accent-cyan); margin-top: 24px; margin-bottom: 12px; font-size: 20px;">$1</h2>');
+    // Strip raw code blocks ```
+    html = html.replace(/```[\s\S]*?```/g, function(match) {
+        return match.replace(/```/g, '').trim();
+    });
 
+    // Bold text
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Headings
+    html = html.replace(/^### (.*$)/gim, '<h3 style="color: var(--color-accent-cyan); margin-top: 22px; margin-bottom: 10px; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px;">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 style="color: var(--color-accent-cyan); margin-top: 26px; margin-bottom: 12px; font-size: 20px;">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 style="color: var(--color-accent-cyan); margin-top: 28px; margin-bottom: 14px; font-size: 22px;">$1</h1>');
+
+    // Convert raw Markdown tables if present to HTML tables
+    html = html.replace(/\|(.+)\|/g, function(match) {
+        const cells = match.split('|').filter(c => c.trim() !== '').map(c => `<td style="padding: 10px 14px; border: 1px solid rgba(255,255,255,0.15);">${c.trim()}</td>`).join('');
+        return `<table style="width: 100%; border-collapse: collapse; margin: 16px 0; background: rgba(0,0,0,0.2); border-radius: 8px;"><tr>${cells}</tr></table>`;
+    });
+
+    // Horizontal rules
+    html = html.replace(/^---$/gim, '<hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.15); margin: 20px 0;">');
+
+    // Bullet lists
+    html = html.replace(/^\* (.*$)/gim, '<li style="margin-left: 20px; margin-bottom: 6px;">$1</li>');
+    html = html.replace(/^- (.*$)/gim, '<li style="margin-left: 20px; margin-bottom: 6px;">$1</li>');
+
+    // Paragraph breaks
     html = html.replace(/\n\n/g, '</p><p style="margin-bottom: 12px;">');
     html = '<p style="margin-bottom: 12px;">' + html + '</p>';
     

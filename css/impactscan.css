@@ -53,29 +53,64 @@ body {
 /* Navigation Header */
 .scan-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 24px 48px;
-    max-width: 1280px;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+    padding: 48px 24px 24px 24px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
 .scan-brand {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     text-decoration: none;
     color: var(--color-text-main);
 }
 
-.scan-brand svg {
-    width: 36px;
-    height: 36px;
+.gcp-logo-container {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.gcp-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(53, 208, 247, 0.4) 0%, rgba(1, 101, 162, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+#gcp-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 0 12px rgba(53, 208, 247, 0.6));
+    transition: transform 0.3s ease;
+}
+
+#gcp-svg:hover {
+    transform: scale(1.06);
+}
+
+.st0 {
+    fill: url(#gcp-gradient);
 }
 
 .scan-brand-title {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 34px;
+    font-weight: 800;
     letter-spacing: -0.5px;
     background: linear-gradient(135deg, #FFFFFF 30%, var(--color-accent-cyan) 100%);
     -webkit-background-clip: text;
