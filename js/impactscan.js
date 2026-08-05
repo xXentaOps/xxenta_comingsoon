@@ -82,7 +82,6 @@ function renderQuestion(stepIndex) {
 
     container.innerHTML = `
         <h2 class="question-title">${q.title}</h2>
-        <div class="question-philosophy">${q.philosophy}</div>
         <p class="question-prompt">${q.question}</p>
         <div class="options-list">
             ${optionsHTML}
